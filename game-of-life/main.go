@@ -65,8 +65,15 @@ func update_board(b [][]uint8, buffer [][]uint8) error {
 }
 func show_board(b [][]uint8){
 
-	for _, s := range b{
-		fmt.Println(s)
+	for _, row := range b{
+		for _, elem := range row {
+			if elem == 0 {
+				fmt.Print("  ")
+			} else {
+				fmt.Print("*")
+			}
+		}
+		fmt.Println()
 	}
 	fmt.Println("\n")
 }
