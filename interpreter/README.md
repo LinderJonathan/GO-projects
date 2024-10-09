@@ -9,8 +9,7 @@
 *Source code -> Tokenization -> Abstract syntax -> Evaluation*
 ## 0. Source code
 
-## 1. Tokenization/Lexing
-
+## 1. Tokenization & Lexing
 
 ## 2. Token to Tree
 
