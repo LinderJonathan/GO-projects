@@ -9,6 +9,10 @@ type Token struct {
 }
 
 const (
+	// Misc.
+	EOF     = "EOF"
+	ILLEGAL = "ILLEGAL"
+
 	// Identifiers
 	IDENT = "IDENT"
 	INT   = "INT"
@@ -21,6 +25,8 @@ const (
 	GT   = ">"
 	LTEQ = "<="
 	GTEQ = ">="
+	MOD  = "%"
+
 	// punctuations
 	COMMA     = ","
 	SEMICOLON = ";"
@@ -34,4 +40,5 @@ const (
 	LET      = "LET"
 	FOR      = "FOR"
 	WHILE    = "WHILE"
+	RETURN   = "RETURN"
 )
