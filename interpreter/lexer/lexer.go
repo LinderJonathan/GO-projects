@@ -31,7 +31,17 @@ func (l *lexer) read_char(input string) {
 	}
 }
 
-func (l *lexer) advance(input string) {
+/*
+Function Name: advance
+Description: advance the input position pointer
+
+Params:
+  - input: string - input code
+
+Returns:
+  - nil
+*/
+func (l *lexer) advance_pos(input string) {
 	l.position++
 	if l.position >= len(input) {
 		l.ch = 0
@@ -44,4 +54,13 @@ func (l *lexer) advance(input string) {
 func (l *lexer) add_token(tokenType token.TokenType, literal string, number int) {
 	token := token.Token{Type: tokenType, Literal: literal, Number: number}
 	l.tokens = append(l.tokens, token)
+}
+
+// TODO: restructure token
+func (l *lexer) tokenize(input string) {
+	switch c := l.ch; c {
+	// punctuations
+	case ',':
+		l.add_token(token.COMMA, string(l.ch), nil)
+	}
 }
