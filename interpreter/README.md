@@ -38,6 +38,15 @@ if (age > 18) {
     puts("You are a minor");
 }
 
+// While- and for loops
+while (age > 10) {
+    puts(age)
+}
+
+for (i = 0; i < 15; i = i + 1) {
+    puts(i)
+}
+
 // First-class functions and closures
 let outer = fn(x) {
     let inner = fn(y) {
