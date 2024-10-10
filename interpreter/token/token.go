@@ -41,4 +41,8 @@ const (
 	FOR      = "FOR"
 	WHILE    = "WHILE"
 	RETURN   = "RETURN"
+	FALSE    = "FALSE"
+	TRUE     = "TRUE"
 )
+
+//func create
