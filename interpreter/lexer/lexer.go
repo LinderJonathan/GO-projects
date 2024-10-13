@@ -5,62 +5,77 @@ import (
 )
 
 type lexer struct {
-	input           string
-	position        int
-	currentPosition int
-	ch              byte
-	tokens          []token.Token
+	input      string
+	pos        int
+	readingPos int
+	ch         byte
+	tokens     []token.Token
 }
 
-func (l *lexer) lexInit(input string) {
-	l.currentPosition = 0
-	l.position = 0
-	l.input = input
-	l.ch = 0
+// Initialize the lexer
+func init_lexer(input string) *lexer {
+	l := &lexer{input: input}
+
+	// initializing pointers and first characters
+	l.read_char()
+	return l
 }
 
-func (l *lexer) read_char(input string) {
-	l.input = input
-	l.position = 0
-	l.currentPosition = 0
+// read a character, update reading position and current position
+func (l *lexer) read_char() {
 
-	if len(input) > 0 {
-		l.ch = input[0]
+	if len(l.input) <= l.readingPos {
+		l.ch = l.input[l.readingPos]
 	} else {
 		l.ch = 0
 	}
-}
-
-/*
-Function Name: advance
-Description: advance the input position pointer
-
-Params:
-  - input: string - input code
-
-Returns:
-  - nil
-*/
-func (l *lexer) advance_pos(input string) {
-	l.position++
-	if l.position >= len(input) {
-		l.ch = 0
-	} else {
-		l.ch = l.input[l.position]
-	}
+	l.pos = l.readingPos
+	l.readingPos++
 }
 
 // Token handling
-func (l *lexer) add_token(tokenType token.TokenType, literal string, number int) {
-	token := token.Token{Type: tokenType, Literal: literal, Number: number}
-	l.tokens = append(l.tokens, token)
+func tokenize(tokenType token.TokenType, ch byte) token.Token {
+	token := token.Token{Type: tokenType, Lit: string(ch)}
+	return token
 }
 
-// TODO: restructure token
-func (l *lexer) tokenize(input string) {
+func (l *lexer) get_next_token() token.Token {
+	var t token.Token
 	switch c := l.ch; c {
-	// punctuations
+
+	// handling of single character lexeme
+
+	// single punctuators
 	case ',':
-		l.add_token(token.COMMA, string(l.ch), nil)
+		t = tokenize(token.COMMA, l.ch)
+	case ';':
+		t = tokenize(token.SEMICOLON, l.ch)
+	case '.':
+		t = tokenize(token.DOT, l.ch)
+	case '{':
+		t = tokenize(token.LBR, l.ch)
+	case '}':
+		t = tokenize(token.RBR, l.ch)
+	case '(':
+		t = tokenize(token.LPAR, l.ch)
+	case ')':
+		t = tokenize(token.RPAR, l.ch)
+
+	// operators
+	case '+':
+		t = tokenize(token.PLUS, l.ch)
+	case '-':
+		t = tokenize(token.SUB, l.ch)
+	case '/':
+		t = tokenize(token.DIV, l.ch)
+	case '*':
+		t = tokenize(token.MUL, l.ch)
+	case '<':
+		t = tokenize(token.LT, l.ch)
+	case '>':
+		t = tokenize(token.GT, l.ch)
+
 	}
+
+	return t
 }
