@@ -3,9 +3,8 @@ package token
 type TokenType string
 
 type Token struct {
-	Type    TokenType
-	Literal string
-	Number  interface{}
+	Type TokenType
+	Lit  string
 }
 
 const (
