@@ -25,6 +25,7 @@ const (
 	LTEQ = "<="
 	GTEQ = ">="
 	MOD  = "%"
+	ASS  = "="
 
 	// punctuations
 	COMMA     = ","

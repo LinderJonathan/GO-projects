@@ -33,6 +33,19 @@ func (l *lexer) read_char() {
 	l.readingPos++
 }
 
+// read an identifier
+func (l *lexer) read_ident() string {
+
+	// read one char at a time
+	temp := ""
+	for l.ch != ' ' {
+		temp += string(l.ch)
+		l.read_char()
+	}
+
+	return temp
+}
+
 // Token handling
 func tokenize(tokenType token.TokenType, ch byte) token.Token {
 	token := token.Token{Type: tokenType, Lit: string(ch)}
@@ -45,7 +58,7 @@ func (l *lexer) get_next_token() token.Token {
 
 	// handling of single character lexeme
 
-	// single punctuators
+	// single lexeme: punctuations, math operators
 	case ',':
 		t = tokenize(token.COMMA, l.ch)
 	case ';':
@@ -74,8 +87,11 @@ func (l *lexer) get_next_token() token.Token {
 		t = tokenize(token.LT, l.ch)
 	case '>':
 		t = tokenize(token.GT, l.ch)
-
+	case '%':
+		t = tokenize(token.MOD, l.ch)
 	}
+
+	//if unicode.IsLetter(l.ch) == true {}
 
 	return t
 }
