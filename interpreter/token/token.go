@@ -7,6 +7,16 @@ type Token struct {
 	Lit  string
 }
 
+var Keywords = map[string]TokenType{
+	"func":   FUNCTION,
+	"let":    LET,
+	"for":    FOR,
+	"while":  WHILE,
+	"return": RETURN,
+	"false":  FALSE,
+	"true":   TRUE,
+}
+
 const (
 	// Misc.
 	EOF     = "EOF"

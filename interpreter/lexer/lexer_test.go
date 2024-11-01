@@ -7,12 +7,13 @@ import (
 )
 
 func TestGetNextToken(t *testing.T) {
-	input := "=+(){},;"
+	input := `=+(){},; func let 12345 identifier`
 
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
+		// Simple single-character tokens
 		{token.ASS, "="},
 		{token.PLUS, "+"},
 		{token.LPAR, "("},
@@ -21,12 +22,27 @@ func TestGetNextToken(t *testing.T) {
 		{token.RBR, "}"},
 		{token.COMMA, ","},
 		{token.SEMICOLON, ";"},
+
+		// Multi-character operators (assuming you've implemented these)
+		//{token.LTEQ, "<="},
+		//{token.GTEQ, ">="},
+
+		// Keywords
+		{token.FUNCTION, "func"},
+		{token.LET, "let"},
+
+		// Integer literal
+		{token.INT, "12345"},
+
+		// Identifier
+		{token.IDENT, "identifier"},
 	}
+
 	l := New(input)
 
 	for i, tt := range tests {
 		tok := l.get_next_token()
-		t.Log(tok)
+		t.Logf("Token %d: %+v", i, tok)
 		if tok.Type != tt.expectedType {
 			t.Fatalf("test[%d] - token type wrong. Expected =%q, got %q", i, tt.expectedType, tok.Type)
 		}

@@ -48,7 +48,32 @@ func (l *lexer) read_sequence() string {
 	return key
 }
 
-//TODO: lookup func. for identifiers/keywords
+/*
+Check if a lexeme is a number
+*/
+// TODO: this
+func is_number(ident string) bool {
+	for _, ch := range ident {
+		if !unicode.IsDigit(ch) {
+			return false
+		}
+	}
+	return true
+}
+
+/*
+Checks if a sequence of characters is a keyword
+Otherwise an identifier
+*/
+func (l *lexer) lookup_ident(ident string) token.TokenType {
+	if tok, ok := token.Keywords[ident]; ok {
+		return tok
+	}
+	if is_number(ident) {
+		return token.INT
+	}
+	return token.IDENT
+}
 
 //TODO: lookup func. for single lexeme
 
@@ -58,6 +83,9 @@ func tokenize(tokenType token.TokenType, ch rune) token.Token {
 	return token
 }
 
+/*
+Sequentially create token from the input
+*/
 func (l *lexer) get_next_token() token.Token {
 	var t token.Token
 
@@ -71,10 +99,12 @@ func (l *lexer) get_next_token() token.Token {
 		return token.Token{Type: token.EOF}
 	}
 
-	//if unicode.IsLetter(l.ch){
-	//	ident := l.read_sequence()
-	//	t = tokenize(token.)
-	//}
+	// handle identifiers, keywords and numbers
+	if unicode.IsLetter(l.ch) || unicode.IsNumber(l.ch) {
+		ident := l.read_sequence()
+		seqType := l.lookup_ident(ident)
+		return token.Token{Type: seqType, Lit: ident}
+	}
 
 	// Token processing based on current character
 	switch l.ch {
@@ -102,8 +132,10 @@ func (l *lexer) get_next_token() token.Token {
 		t = tokenize(token.LPAR, l.ch)
 	case ')':
 		t = tokenize(token.RPAR, l.ch)
+		// TODO: handle '<='
 	case '<':
 		t = tokenize(token.LT, l.ch)
+		// TODO: handle '>='
 	case '>':
 		t = tokenize(token.GT, l.ch)
 	case '%':
