@@ -17,6 +17,24 @@ var Keywords = map[string]TokenType{
 	"true":   TRUE,
 }
 
+var Singles = map[string]TokenType{
+	"+": PLUS,
+	"-": SUB,
+	"/": DIV,
+	"*": MUL,
+	"<": LT,
+	">": GT,
+	"%": MOD,
+	"=": ASS,
+	",": COMMA,
+	";": SEMICOLON,
+	".": DOT,
+	"{": LBR,
+	"}": RBR,
+	"(": LPAR,
+	")": RPAR,
+}
+
 const (
 	// Misc.
 	EOF     = "EOF"

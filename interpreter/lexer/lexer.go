@@ -36,6 +36,15 @@ func (l *lexer) read_char() {
 	l.readingPos += 1
 }
 
+// peeks and reads next character in sinput
+func (l *lexer) peek_char() rune {
+
+	if len(l.input) <= l.readingPos {
+		l.ch = 0
+	}
+	return rune(l.input[l.readingPos])
+}
+
 // read an identifier or a keyword
 func (l *lexer) read_sequence() string {
 
@@ -65,7 +74,7 @@ func is_number(ident string) bool {
 Checks if a sequence of characters is a keyword
 Otherwise an identifier
 */
-func (l *lexer) lookup_ident(ident string) token.TokenType {
+func (l *lexer) lookup_ident_type(ident string) token.TokenType {
 	if tok, ok := token.Keywords[ident]; ok {
 		return tok
 	}
@@ -75,7 +84,12 @@ func (l *lexer) lookup_ident(ident string) token.TokenType {
 	return token.IDENT
 }
 
-//TODO: lookup func. for single lexeme
+func (l *lexer) lookup_lexeme(ch rune) token.TokenType {
+	if tok, ok := token.Singles[string(ch)]; ok {
+		return tok
+	}
+	return token.ILLEGAL
+}
 
 // Token handling
 func tokenize(tokenType token.TokenType, ch rune) token.Token {
@@ -102,48 +116,32 @@ func (l *lexer) get_next_token() token.Token {
 	// handle identifiers, keywords and numbers
 	if unicode.IsLetter(l.ch) || unicode.IsNumber(l.ch) {
 		ident := l.read_sequence()
-		seqType := l.lookup_ident(ident)
+		seqType := l.lookup_ident_type(ident)
 		return token.Token{Type: seqType, Lit: ident}
 	}
+	// handle single lexeme
+	singleType := l.lookup_lexeme(l.ch)
+	switch singleType {
+	case token.LT:
+		if l.peek_char() == '=' {
+			l.read_char()
+			return token.Token{Type: token.LTEQ, Lit: "<="}
+		}
+		return token.Token{Type: token.LT, Lit: "<"}
 
-	// Token processing based on current character
-	switch l.ch {
-	case '=':
-		t = tokenize(token.ASS, l.ch)
-	case '+':
-		t = tokenize(token.PLUS, l.ch)
-	case '-':
-		t = tokenize(token.SUB, l.ch)
-	case '*':
-		t = tokenize(token.MUL, l.ch)
-	case '/':
-		t = tokenize(token.DIV, l.ch)
-	case ',':
-		t = tokenize(token.COMMA, l.ch)
-	case ';':
-		t = tokenize(token.SEMICOLON, l.ch)
-	case '.':
-		t = tokenize(token.DOT, l.ch)
-	case '{':
-		t = tokenize(token.LBR, l.ch)
-	case '}':
-		t = tokenize(token.RBR, l.ch)
-	case '(':
-		t = tokenize(token.LPAR, l.ch)
-	case ')':
-		t = tokenize(token.RPAR, l.ch)
-		// TODO: handle '<='
-	case '<':
-		t = tokenize(token.LT, l.ch)
-		// TODO: handle '>='
-	case '>':
-		t = tokenize(token.GT, l.ch)
-	case '%':
-		t = tokenize(token.MOD, l.ch)
+	case token.GT:
+		if l.peek_char() == '=' {
+			l.read_char()
+			return token.Token{Type: token.GTEQ, Lit: ">="}
+		}
+		return token.Token{Type: token.GT, Lit: ">"}
+
 	default:
-		t = tokenize(token.ILLEGAL, l.ch) // Handle unexpected characters
+		if singleType == token.ILLEGAL {
+			return token.Token{Type: token.ILLEGAL, Lit: string(l.ch)}
+		}
+		t = tokenize(singleType, l.ch)
 	}
-
 	// Move to the next character after processing
 	l.read_char()
 	return t
