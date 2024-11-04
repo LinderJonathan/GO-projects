@@ -7,50 +7,37 @@ import (
 )
 
 func TestGetNextToken(t *testing.T) {
-	input := `=+(){},; func let 12345 identifier`
+	input := `let x = 10 <= 20 >= 15;`
 
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
-		// Simple single-character tokens
-		{token.ASS, "="},
-		{token.PLUS, "+"},
-		{token.LPAR, "("},
-		{token.RPAR, ")"},
-		{token.LBR, "{"},
-		{token.RBR, "}"},
-		{token.COMMA, ","},
-		{token.SEMICOLON, ";"},
-
-		// Multi-character operators (assuming you've implemented these)
-		//{token.LTEQ, "<="},
-		//{token.GTEQ, ">="},
-
-		// Keywords
-		{token.FUNCTION, "func"},
 		{token.LET, "let"},
-
-		// Integer literal
-		{token.INT, "12345"},
-
-		// Identifier
-		{token.IDENT, "identifier"},
+		{token.IDENT, "x"},
+		{token.ASS, "="},
+		{token.INT, "10"},
+		{token.LTEQ, "<="},
+		{token.INT, "20"},
+		{token.GTEQ, ">="},
+		{token.INT, "15"},
+		{token.SEMICOLON, ";"},
+		{token.EOF, ""},
 	}
 
-	l := New(input)
+	l := lexer.New(input)
 
 	for i, tt := range tests {
-		tok := l.get_next_token()
-		t.Logf("Token %d: %+v", i, tok)
+		tok := l.GetNextToken()
+
 		if tok.Type != tt.expectedType {
-			t.Fatalf("test[%d] - token type wrong. Expected =%q, got %q", i, tt.expectedType, tok.Type)
+			t.Fatalf("tests[%d] - token type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 		}
+
 		if tok.Lit != tt.expectedLiteral {
-			t.Fatalf("test[%d] - token literal wrong. Expected =%q, got %q", i, tt.expectedLiteral, tok.Lit)
+			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Lit)
 		}
 	}
-	t.Log("get_next_token passed all tests")
 }
 
 func TestReadSequence(t *testing.T) {
