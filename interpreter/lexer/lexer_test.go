@@ -25,10 +25,10 @@ func TestGetNextToken(t *testing.T) {
 		{token.EOF, ""},
 	}
 
-	l := lexer.New(input)
+	l := NewLexer(input)
 
 	for i, tt := range tests {
-		tok := l.GetNextToken()
+		tok := l.get_next_token()
 
 		if tok.Type != tt.expectedType {
 			t.Fatalf("tests[%d] - token type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
@@ -57,7 +57,7 @@ func TestReadSequence(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		l := New(tt.input)
+		l := NewLexer(tt.input)
 		sequence := l.read_sequence()
 		if sequence != tt.expected {
 			t.Fatalf("test[%d] - read_sequence() wrong. Expected %q, got %q", i, tt.expected, sequence)

@@ -15,7 +15,7 @@ type lexer struct {
 }
 
 // Initialize the lexer
-func New(input string) *lexer {
+func NewLexer(input string) *lexer {
 	l := &lexer{input: input}
 
 	// initializing pointers and first characters
