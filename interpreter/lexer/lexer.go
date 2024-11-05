@@ -38,9 +38,8 @@ func (l *lexer) read_char() {
 
 // peeks and reads next character in sinput
 func (l *lexer) peek_char() rune {
-
 	if len(l.input) <= l.readingPos {
-		l.ch = 0
+		return 0 // Return 0 if at the end of input
 	}
 	return rune(l.input[l.readingPos])
 }
@@ -101,8 +100,6 @@ func tokenize(tokenType token.TokenType, ch rune) token.Token {
 Sequentially create token from the input
 */
 func (l *lexer) get_next_token() token.Token {
-	var t token.Token
-
 	// Skip whitespace
 	for l.ch == ' ' || l.ch == '\n' || l.ch == '\t' {
 		l.read_char()
@@ -113,35 +110,38 @@ func (l *lexer) get_next_token() token.Token {
 		return token.Token{Type: token.EOF}
 	}
 
-	// handle identifiers, keywords and numbers
+	// Handle identifiers, keywords, and numbers
 	if unicode.IsLetter(l.ch) || unicode.IsNumber(l.ch) {
 		ident := l.read_sequence()
 		seqType := l.lookup_ident_type(ident)
 		return token.Token{Type: seqType, Lit: ident}
 	}
-	// handle single lexeme
+
+	// Handle single lexemes and compound operators
 	singleType := l.lookup_lexeme(l.ch)
 	switch singleType {
 	case token.LT:
 		if l.peek_char() == '=' {
+			l.read_char() // Advance past '=' for compound token
 			l.read_char()
 			return token.Token{Type: token.LTEQ, Lit: "<="}
 		}
+		l.read_char()
 		return token.Token{Type: token.LT, Lit: "<"}
 
 	case token.GT:
 		if l.peek_char() == '=' {
+			l.read_char() // Advance past '=' for compound token
 			l.read_char()
 			return token.Token{Type: token.GTEQ, Lit: ">="}
 		}
+		l.read_char()
 		return token.Token{Type: token.GT, Lit: ">"}
-
-	default:
-		if singleType == token.ILLEGAL {
-			return token.Token{Type: token.ILLEGAL, Lit: string(l.ch)}
-		}
-		t = tokenize(singleType, l.ch)
 	}
+
+	// Fallback to single lexeme processing
+	t := tokenize(singleType, l.ch)
+
 	// Move to the next character after processing
 	l.read_char()
 	return t
