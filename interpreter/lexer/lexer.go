@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"unicode"
 
 	"github.com/LinderJonathan/go-projects/interpreter/token"
@@ -136,7 +137,24 @@ func (l *lexer) get_next_token() token.Token {
 			return token.Token{Type: token.GTEQ, Lit: ">="}
 		}
 		l.read_char()
+		fmt.Println("im here")
 		return token.Token{Type: token.GT, Lit: ">"}
+	case token.NOT:
+		if l.peek_char() == '=' {
+			l.read_char() // Advance past '=' for compound token
+			l.read_char()
+			return token.Token{Type: token.NEQ, Lit: "!="}
+		}
+		l.read_char()
+		return token.Token{Type: token.NOT, Lit: "!"}
+	case token.ASS:
+		if l.peek_char() == '=' {
+			l.read_char() // Advance past '=' for compound token
+			l.read_char()
+			return token.Token{Type: token.EQ, Lit: "=="}
+		}
+		l.read_char()
+		return token.Token{Type: token.ASS, Lit: "="}
 	}
 
 	// Fallback to single lexeme processing

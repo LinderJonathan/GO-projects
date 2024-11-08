@@ -15,6 +15,8 @@ var Keywords = map[string]TokenType{
 	"return": RETURN,
 	"false":  FALSE,
 	"true":   TRUE,
+	"if":     IF,
+	"else":   ELSE,
 }
 
 var Singles = map[string]TokenType{
@@ -50,8 +52,11 @@ const (
 	MUL  = "*"
 	LT   = "<"
 	GT   = ">"
+	NOT  = "!"
 	LTEQ = "<="
 	GTEQ = ">="
+	NEQ  = "!="
+	EQ   = "=="
 	MOD  = "%"
 	ASS  = "="
 
@@ -68,6 +73,8 @@ const (
 	LET      = "LET"
 	FOR      = "FOR"
 	WHILE    = "WHILE"
+	IF       = "IF"
+	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 	FALSE    = "FALSE"
 	TRUE     = "TRUE"
