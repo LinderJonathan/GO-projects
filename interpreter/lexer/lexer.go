@@ -60,7 +60,6 @@ func (l *lexer) read_sequence() string {
 /*
 Check if a lexeme is a number
 */
-// TODO: this
 func is_number(ident string) bool {
 	for _, ch := range ident {
 		if !unicode.IsDigit(ch) {
