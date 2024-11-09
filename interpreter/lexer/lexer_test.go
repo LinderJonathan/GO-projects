@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/LinderJonathan/go-projects/interpreter/token"
@@ -83,6 +84,7 @@ func TestGetNextToken(t *testing.T) {
 
 	for i, tt := range tests {
 		tok := l.get_next_token()
+		fmt.Println(tok)
 		if tok.Type != tt.expectedType {
 			t.Fatalf("tests[%d] - token type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 		}
