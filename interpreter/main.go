@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	//"github.com/LinderJonathan/go-projects/interpreter/lexer"
+	"github.com/LinderJonathan/go-projects/interpreter/repl"
 )
 
 func main() {
-	fmt.Println("Interpreter")
+	repl.Start()
 }
