@@ -17,6 +17,7 @@ var Keywords = map[string]TokenType{
 	"true":   TRUE,
 	"if":     IF,
 	"else":   ELSE,
+	"elsif":  ELSEIF,
 }
 
 var Singles = map[string]TokenType{
@@ -75,6 +76,7 @@ const (
 	WHILE    = "WHILE"
 	IF       = "IF"
 	ELSE     = "ELSE"
+	ELSEIF   = "ELSEIF"
 	RETURN   = "RETURN"
 	FALSE    = "FALSE"
 	TRUE     = "TRUE"

@@ -1,13 +1,12 @@
 package lexer
 
 import (
-	"fmt"
 	"unicode"
 
 	"github.com/LinderJonathan/go-projects/interpreter/token"
 )
 
-type lexer struct {
+type Lexer struct {
 	input      string
 	pos        int
 	readingPos int
@@ -16,8 +15,8 @@ type lexer struct {
 }
 
 // Initialize the lexer
-func NewLexer(input string) *lexer {
-	l := &lexer{input: input}
+func NewLexer(input string) *Lexer {
+	l := &Lexer{input: input}
 
 	// initializing pointers and first characters
 	l.read_char()
@@ -25,7 +24,7 @@ func NewLexer(input string) *lexer {
 }
 
 // read a character, update reading position and current position
-func (l *lexer) read_char() {
+func (l *Lexer) read_char() {
 
 	if len(l.input) <= l.readingPos {
 		l.ch = 0
@@ -38,7 +37,7 @@ func (l *lexer) read_char() {
 }
 
 // peeks and reads next character in sinput
-func (l *lexer) peek_char() rune {
+func (l *Lexer) peek_char() rune {
 	if len(l.input) <= l.readingPos {
 		return 0 // Return 0 if at the end of input
 	}
@@ -46,7 +45,7 @@ func (l *lexer) peek_char() rune {
 }
 
 // read an identifier or a keyword
-func (l *lexer) read_sequence() string {
+func (l *Lexer) read_sequence() string {
 
 	// read one char at a time
 	key := ""
@@ -73,7 +72,7 @@ func is_number(ident string) bool {
 Checks if a sequence of characters is a keyword
 Otherwise an identifier
 */
-func (l *lexer) lookup_ident_type(ident string) token.TokenType {
+func (l *Lexer) lookup_ident_type(ident string) token.TokenType {
 	if tok, ok := token.Keywords[ident]; ok {
 		return tok
 	}
@@ -83,7 +82,7 @@ func (l *lexer) lookup_ident_type(ident string) token.TokenType {
 	return token.IDENT
 }
 
-func (l *lexer) lookup_lexeme(ch rune) token.TokenType {
+func (l *Lexer) lookup_lexeme(ch rune) token.TokenType {
 	if tok, ok := token.Singles[string(ch)]; ok {
 		return tok
 	}
@@ -99,7 +98,7 @@ func tokenize(tokenType token.TokenType, ch rune) token.Token {
 /*
 Sequentially create token from the input
 */
-func (l *lexer) get_next_token() token.Token {
+func (l *Lexer) GetNextToken() token.Token {
 	// Skip whitespace
 	for l.ch == ' ' || l.ch == '\n' || l.ch == '\t' {
 		l.read_char()
@@ -136,7 +135,6 @@ func (l *lexer) get_next_token() token.Token {
 			return token.Token{Type: token.GTEQ, Lit: ">="}
 		}
 		l.read_char()
-		fmt.Println("im here")
 		return token.Token{Type: token.GT, Lit: ">"}
 	case token.NOT:
 		if l.peek_char() == '=' {

@@ -83,7 +83,7 @@ func TestGetNextToken(t *testing.T) {
 	l := NewLexer(input)
 
 	for i, tt := range tests {
-		tok := l.get_next_token()
+		tok := l.GetNextToken()
 		fmt.Println(tok)
 		if tok.Type != tt.expectedType {
 			t.Fatalf("tests[%d] - token type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
