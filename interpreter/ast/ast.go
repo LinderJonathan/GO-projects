@@ -6,33 +6,6 @@ import (
 )
 
 /*
-PARSER
-*/
-type Parser struct {
-	l            *lexer.Lexer
-	currentToken token.Token
-	peekToken    token.Token
-}
-
-func NewParser(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
-
-	// init token positions
-	p.currentToken = l.GetNextToken()
-	p.peekToken = l.GetNextToken()
-
-	return p
-}
-
-/*
-Update token position
-*/
-func (p *Parser) NextToken() {
-	p.currentToken = p.peekToken
-	p.peekToken = p.l.GetNextToken()
-}
-
-/*
 	ABSTRACT SYNTAX TREE
 */
 
@@ -54,14 +27,18 @@ type Expr interface {
 	ExprNode()
 }
 
-type Ast interface {
-	// holds nodes
-	*Node
-}
-
 /*
 program :)
 */
+
+
+/*
+	A program is a slice of statements
+*/
+type Program struct {
+	Stms []Stm
+}
+
 func (p *Program) TokenLiteral() string {
 	if len(p.Stms) > 0 {
 		return p.Stms[0].TokenLiteral()
@@ -73,12 +50,6 @@ func (p *Program) String() {
 
 }
 
-/*
-Construct for a program. Main entry point
-*/
-type Program struct {
-	Stms []Stm
-}
 
 /*
 	Constructs for statements and expressions
@@ -90,6 +61,15 @@ type BlockStm struct {
 	Stms   []Stm
 	RBrace token.Token
 }
+
+func (bs *BlockStm) StmNode() {}
+func (bs *BlockStm) TokenLiteral() string {
+	if len(bs.Stms) > 0 {
+		return bs.Stms[0].TokenLiteral()
+	}
+	return bs.Stms.Lit
+}
+
 
 // An identifier is some token, followed with a value that it holds
 type Identifier struct {
@@ -121,6 +101,11 @@ type WhileStm struct {
 	Block      *BlockStm
 }
 
+func (ws *WhileStm) StmNode() {}
+func (ws *WhileStm) TokenLiteral() string {
+	return ws.TokenWhile.Lit
+}
+
 // an "if" statement is followed by an expression, and possibly an "if else" statement and/or an "else" statement
 type ifStm struct {
 	TokenIf   token.Token
@@ -130,4 +115,19 @@ type ifStm struct {
 	ElseBlock *BlockStm
 }
 
-//
+func (is *WhileStm) StmNode() {}
+func (is *WhileStm) TokenLiteral() string {
+	return is.TokenIf.Lit
+}
+
+// Return statement
+type returnStm struct {
+	TokenReturn token.Token
+	Value Expr
+
+}
+
+func (rs *returnStm) StmNode() {}
+func (rs *returnStm) TokenLiteral() string {
+	return rs.TokenReturn.Lit
+}
